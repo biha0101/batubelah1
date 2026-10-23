@@ -533,7 +533,7 @@
     // FUNGSI MEMAIN KAN FAIL AUDIO MP3 (DENGAN SAFE FALLBACK)
     // ==========================================
     function playAudioFile(fileName, fallbackText) {
-      const audioPath = 'audio/' + fileName;
+      const audioPath = fileName;
       const audio = new Audio(audioPath);
 
       const promise = audio.play();
