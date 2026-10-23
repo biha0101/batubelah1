@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kad Huruf Misteri - Batu Belah Batu Bertangkup</title>
+  
+  <!-- Font Mesra Disleksia (Lexend & Comic Neue) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Lexend:wght@600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #2c1a4d 0%, #1a0b2e 100%);
+      --card-uppercase-bg: #fff9db;
+      --card-uppercase-border: #fcc419;
+      --card-lowercase-bg: #e7f5ff;
+      --card-lowercase-border: #339af0;
+      --accent-color: #ffd43b;
+      --text-dark: #212529;
+      --baseline-color: #40c057;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Lexend', 'Comic Neue', sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #ffffff;
+      padding: 15px;
+      overflow-x: hidden;
+    }
+
+    /* SKRIN MULA / START SCREEN */
+    #start-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 7, 32, 0.95);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .start-card {
+      background: #251640;
+      padding: 30px 25px;
+      border-radius: 24px;
+      border: 3px solid var(--accent-color);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      max-width: 440px;
+      width: 100%;
+    }
+
+    .start-card h1 {
+      font-size: 1.8rem;
+      color: var(--accent-color);
+      margin-bottom: 8px;
+    }
+
+    .start-card p.slogan {
+      font-size: 0.95rem;
+      color: #da77f2;
+      margin-bottom: 20px;
+    }
+
+    /* KOTAK CARA BERMAIN DI SKRIN MULA */
+    .start-instructions {
+      background: rgba(255, 255, 255, 0.07);
+      border: 2px dashed #7950f2;
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      text-align: left;
+      font-size: 0.88rem;
+      color: #e9ecef;
+      line-height: 1.5;
+    }
+
+    .start-instructions h3 {
+      color: var(--accent-color);
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .start-instructions ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    .start-instructions li {
+      margin-bottom: 6px;
+    }
+
+    .start-instructions li:last-child {
+      margin-bottom: 0;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      color: #e9ecef;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 2px solid #5c4880;
+      background: #1a0b2e;
+      color: #fff;
+      font-size: 1.1rem;
+      font-family: 'Lexend', sans-serif;
+      outline: none;
+      text-align: center;
+    }
+
+    .input-group input:focus {
+      border-color: var(--accent-color);
+    }
+
+    .btn-start {
+      background: #40c057;
+      color: #000;
+      font-weight: 800;
+      font-size: 1.2rem;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 50px;
+      cursor: pointer;
+      width: 100%;
+      transition: transform 0.2s, background 0.2s;
+      box-shadow: 0 5px 15px rgba(64, 192, 87, 0.4);
+    }
+
+    .btn-start:hover {
+      transform: scale(1.03);
+      background: #51cf66;
+    }
+
+    /* HEADER & STATS */
+    header {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      color: var(--accent-color);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    header p.slogan {
+      font-size: 0.85rem;
+      color: #da77f2;
+      margin-top: 2px;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 18px;
+      border-radius: 50px;
+      margin-top: 10px;
+      backdrop-filter: blur(5px);
+      font-size: 0.9rem;
+    }
+
+    .player-tag {
+      color: #ffd43b;
+      font-weight: bold;
+    }
+
+    /* CONTROL PANEL */
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-option {
+      background: #3b2563;
+      border: 2px solid #5c4880;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-option.active {
+      background: var(--accent-color);
+      color: var(--text-dark);
+      border-color: var(--accent-color);
+      font-weight: bold;
+    }
+
+    /* GRID GAME */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      max-width: 480px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    /* CARD FLIP DESIGN */
+    .card {
+      aspect-ratio: 3/4;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-style: preserve-3d;
+      border-radius: 16px;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    /* CARD BACK (MUKA BELAKANG) */
+    .card-back {
+      background: linear-gradient(145deg, #4c2882, #2a1152);
+      border: 3px solid #7950f2;
+      color: #ffd43b;
+    }
+
+    .card-back .icon-cave {
+      font-size: 1.8rem;
+    }
+
+    /* CARD FRONT (MUKA DEPAN HURUF) */
+    .card-front {
+      transform: rotateY(180deg);
+      padding: 6px;
+    }
+
+    /* WARNA KAD MENGIKUT JENIS HURUF */
+    .card[data-type="uppercase"] .card-front {
+      background-color: var(--card-uppercase-bg);
+      border: 3px solid var(--card-uppercase-border);
+      color: var(--text-dark);
+    }
+
+    .card[data-type="lowercase"] .card-front {
+      background-color: var(--card-lowercase-bg);
+      border: 3px solid var(--card-lowercase-border);
+      color: var(--text-dark);
+    }
+
+    /* PAPARAN HURUF */
+    .letter-display {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1;
+      position: relative;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    /* GARISAN TAPAK HURUF (INDICATOR DISLEKSIA) */
+    .baseline {
+      width: 100%;
+      height: 4px;
+      background-color: var(--baseline-color);
+      border-radius: 2px;
+      margin-top: 2px;
+    }
+
+    /* DISLEKSIA ADJUSTMENT: Garisan hijau bagi 'p' kecil tepat di bawah perut 'p' */
+    .card[data-type="lowercase"]:has(.letter-text-p) .baseline {
+      position: absolute;
+      top: 82%;
+      left: 0;
+      margin-top: 0;
+    }
+
+    /* KAD SAMA / MATCHED */
+    .card.matched {
+      visibility: visible;
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .card.matched .card-inner {
+      transform: rotateY(180deg) scale(0.95);
+    }
+
+    /* MODAL KEMENANGAN */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #251640;
+      border: 3px solid var(--accent-color);
+      padding: 30px 24px;
+      border-radius: 24px;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      animation: pop 0.3s ease-out;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.7); }
+      100% { transform: scale(1); }
+    }
+
+    .modal h2 {
+      color: var(--accent-color);
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .score-badge {
+      background: linear-gradient(135deg, #ffd43b, #fcc419);
+      color: #000;
+      font-size: 1.6rem;
+      font-weight: 800;
+      padding: 10px 20px;
+      border-radius: 50px;
+      display: inline-block;
+      margin: 12px 0;
+      box-shadow: 0 4px 15px rgba(255, 212, 59, 0.3);
+    }
+
+    .feedback-box {
+      background: rgba(255, 255, 255, 0.08);
+      border-left: 4px solid var(--accent-color);
+      padding: 12px 15px;
+      border-radius: 12px;
+      text-align: left;
+      font-size: 0.95rem;
+      color: #e9ecef;
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+
+    .btn-restart {
+      background: var(--accent-color);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .btn-restart:hover {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 380px) {
+      .game-grid {
+        gap: 8px;
+      }
+      .letter-display {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SKRIN MULA: CARA BERMAIN & ISI NAMA PEMAIN -->
+  <div id="start-screen">
+    <div class="start-card">
+      <h1>🪨 Kad Huruf Misteri</h1>
+      <p class="slogan">buka kad, padankan huruf, kenali bunyi huruf</p>
+
+      <!-- ARAHAN CARA BERMAIN -->
+      <div class="start-instructions">
+        <h3>💡 Cara Bermain:</h3>
+        <ul>
+          <li>Tekan mana-mana <strong>2 kad</strong> secara bergilir untuk membukanya.</li>
+          <li>Cari padanan <strong>Huruf Besar</strong> dan <strong>Huruf Kecil</strong> yang sama (contoh: <code>A</code> dan <code>a</code>).</li>
+          <li>Dengar sebutan bunyi huruf apabila kad dipadankan!</li>
+        </ul>
+      </div>
+
+      <form id="start-form" onsubmit="startGame(event)">
+        <div class="input-group">
+          <label for="player-name">Nama Pemain Wira:</label>
+          <input type="text" id="player-name" placeholder="Isi nama anda di sini..." required autocomplete="off">
+        </div>
+
+        <button type="submit" class="btn-start">MULA BERMAIN 🚀</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- HEADER UTAMA -->
+  <header>
+    <h1>Kad Huruf Misteri</h1>
+    <p class="slogan">buka kad, padankan huruf, kenali bunyi huruf</p>
+    <div class="stats-bar">
+      <div>Pemain: <span id="display-player" class="player-tag">-</span></div>
+      <div>Percubaan: <span id="tries-count">0</span></div>
+      <div>Padanan: <span id="matches-count">0</span>/6</div>
+    </div>
+  </header>
+
+  <!-- CONTROL PANEL (ARAS SAHAJA) -->
+  <div class="controls">
+    <button class="btn-option" onclick="changeDifficulty(4, this)">Mudah (4 set kad)</button>
+    <button class="btn-option active" onclick="changeDifficulty(6, this)">Sederhana (6 set kad)</button>
+  </div>
+
+  <!-- GAME BOARD -->
+  <div class="game-grid" id="game-board"></div>
+
+  <!-- MODAL TAHNIAH (SKOR & ULASAN MEMBINA) -->
+  <div class="modal" id="win-modal">
+    <div class="modal-content">
+      <h2>🎉 TAHNIAH!</h2>
+      <p><span id="win-player-name" style="color:#ffd43b; font-weight:bold;"></span> berjaya membuka rahsia Batu Belah Bertangkup!</p>
+      
+      <!-- PAPARAN MARKAH -->
+      <div class="score-badge">
+        Skor: <span id="final-score">100</span> / 100
+      </div>
+
+      <!-- KOTAK ULASAN MEMBINA MESRA DISLEKSIA -->
+      <div class="feedback-box" id="feedback-text">
+        <!-- Ulasan dimasukkan secara dinamik melalui JavaScript -->
+      </div>
+
+      <p style="font-size: 0.85rem; color: #ced4da; margin-bottom: 15px;">Jumlah Percubaan: <strong id="final-tries">0</strong> kali</p>
+
+      <button class="btn-restart" onclick="restartGame()">Main Lagi 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // INTEGRASI GOOGLE APPS SCRIPT
+    // ==========================================
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbygoJHOVcHHw4PBkzJ1V-xlhjg7gEdSyzNhq1pkff1OtpPlazHsixAstsuwW8AEW-AN/exec";
+
+    function hantarDataKeGoogleSheet(namaPemain, markahG1, ulasanG1) {
+      if (!WEB_APP_URL || WEB_APP_URL === "") {
+        console.warn("[Google Sheets] Web App URL belum dimasukkan.");
+        return;
+      }
+
+      const dataGame = {
+        targetStory: "BATU BELAH BATU BERTANGKUP",
+        playerName: namaPemain,
+        gameType: "G1",          // Menandakan data ini untuk Game 1
+        score: markahG1,         // Markah Game 1
+        ulasanGame: ulasanG1     // Ulasan khusus Game 1
+      };
+
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataGame)
+      })
+      .then(() => {
+        console.log("Data Game 1 berjaya dihantar ke Google Sheets!");
+      })
+      .catch((error) => {
+        console.error("Ralat semasa menghantar data ke Google Sheets:", error);
+      });
+    }
+
+    // ==========================================
+    // FUNGSI MEMAIN KAN FAIL AUDIO MP3 (DENGAN SAFE FALLBACK)
+    // ==========================================
+    function playAudioFile(fileName, fallbackText) {
+      const audioPath = 'audio/' + fileName;
+      const audio = new Audio(audioPath);
+
+      const promise = audio.play();
+      if (promise !== undefined) {
+        promise.catch(err => {
+          console.warn(`[Audio Info] Gagal memainkan ${audioPath}. Guna suara komputer:`, err);
+          speakWord(fallbackText);
+        });
+      }
+    }
+
+    // ==========================================
+    // SENARAI PAIRING (A, B, D, P, M, W)
+    // ==========================================
+    const cardPairs = [
+      { letter: 'A', phonemeText: 'ah' },
+      { letter: 'B', phonemeText: 'beh' },
+      { letter: 'D', phonemeText: 'deh' },
+      { letter: 'P', phonemeText: 'peh' },
+      { letter: 'M', phonemeText: 'meh' },
+      { letter: 'W', phonemeText: 'weh' }
+    ];
+
+    let playerName = "";
+    let selectedPairsCount = 6;
+    let cardsData = [];
+    let flippedCards = [];
+    let matchedCount = 0;
+    let triesCount = 0;
+    let canFlip = true;
+
+    const gameBoard = document.getElementById('game-board');
+    const triesDisplay = document.getElementById('tries-count');
+    const matchesDisplay = document.getElementById('matches-count');
+
+    // Mula Permainan Dari Skrin Mula
+    function startGame(e) {
+      e.preventDefault();
+      const inputName = document.getElementById('player-name').value.trim();
+      playerName = inputName || "Wira Cilik";
+      
+      document.getElementById('display-player').innerText = playerName;
+      document.getElementById('start-screen').style.display = 'none';
+
+      initGame();
+    }
+
+    function changeDifficulty(count, btnElement) {
+      selectedPairsCount = count;
+      document.querySelectorAll('.btn-option').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      restartGame();
+    }
+
+    function initGame() {
+      gameBoard.innerHTML = '';
+      flippedCards = [];
+      matchedCount = 0;
+      triesCount = 0;
+      canFlip = true;
+
+      triesDisplay.innerText = triesCount;
+      matchesDisplay.innerText = `0`;
+      document.querySelector('.stats-bar div:nth-child(3)').innerHTML = `Padanan: <span id="matches-count">0</span>/${selectedPairsCount}`;
+
+      const activePairs = cardPairs.slice(0, selectedPairsCount);
+
+      cardsData = [];
+      activePairs.forEach((pair, index) => {
+        cardsData.push({
+          id: `u_${index}`,
+          pairId: index,
+          letter: pair.letter,
+          displayLetter: pair.letter,
+          type: 'uppercase',
+          phonemeText: pair.phonemeText
+        });
+        cardsData.push({
+          id: `l_${index}`,
+          pairId: index,
+          letter: pair.letter,
+          displayLetter: pair.letter.toLowerCase(),
+          type: 'lowercase',
+          phonemeText: pair.phonemeText
+        });
+      });
+
+      // Shuffle Cards
+      cardsData.sort(() => Math.random() - 0.5);
+
+      // Render Cards
+      cardsData.forEach((item) => {
+        const cardElem = document.createElement('div');
+        cardElem.classList.add('card');
+        cardElem.dataset.id = item.id;
+        cardElem.dataset.pairId = item.pairId;
+        cardElem.dataset.type = item.type;
+
+        // Kelas khas untuk p kecil bagi penetapan posisi garisan baselinenya
+        const letterClass = (item.type === 'lowercase' && item.letter === 'P') ? 'letter-text-p' : '';
+
+        cardElem.innerHTML = `
+          <div class="card-inner">
+            <div class="card-back">
+              <span class="icon-cave">🪨</span>
+            </div>
+            <div class="card-front">
+              <div class="letter-display">
+                <span class="${letterClass}">${item.displayLetter}</span>
+                <div class="baseline"></div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        cardElem.addEventListener('click', () => handleCardClick(cardElem, item));
+        gameBoard.appendChild(cardElem);
+      });
+    }
+
+    function handleCardClick(cardElem, item) {
+      if (!canFlip) return;
+      if (cardElem.classList.contains('flipped') || cardElem.classList.contains('matched')) return;
+
+      playBeep(400, 0.05);
+      cardElem.classList.add('flipped');
+      flippedCards.push({ elem: cardElem, data: item });
+
+      // Memainkan audio nama huruf
+      const letterFileName = `huruf_${item.letter.toLowerCase()}.mp3`;
+      playAudioFile(letterFileName, item.displayLetter);
+
+      if (flippedCards.length === 2) {
+        canFlip = false;
+        triesCount++;
+        triesDisplay.innerText = triesCount;
+
+        checkMatch();
+      }
+    }
+
+    function checkMatch() {
+      const [card1, card2] = flippedCards;
+      const isMatch = card1.data.pairId === card2.data.pairId;
+
+      if (isMatch) {
+        matchedCount++;
+        document.getElementById('matches-count').innerText = matchedCount;
+
+        setTimeout(() => {
+          card1.elem.classList.add('matched');
+          card2.elem.classList.add('matched');
+          playBeep(600, 0.15);
+
+          // Memainkan audio fonem apabila padanan betul
+          const phonemeFileName = `fonem_${card1.data.letter.toLowerCase()}.mp3`;
+          playAudioFile(phonemeFileName, card1.data.phonemeText);
+
+          flippedCards = [];
+          canFlip = true;
+
+          if (matchedCount === selectedPairsCount) {
+            setTimeout(showWinModal, 1000);
+          }
+        }, 600);
+
+      } else {
+        setTimeout(() => {
+          playBeep(200, 0.2);
+          card1.elem.classList.remove('flipped');
+          card2.elem.classList.remove('flipped');
+          flippedCards = [];
+          canFlip = true;
+        }, 1300);
+      }
+    }
+
+    // FALLBACK SPEECH API
+    function speakWord(text) {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'id-ID'; 
+        utterance.rate = 0.7;
+        utterance.pitch = 1.1;
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {
+        console.warn("Speech Synthesis error:", e);
+      }
+    }
+
+    // SYNTHESIZER AUDIO SFX
+    function playBeep(freq, duration) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // FUNGSI PAPARAN SKOR & 5 JULAT ULASAN MEMBINA
+    function showWinModal() {
+      const extraTries = triesCount - selectedPairsCount;
+      let calculatedScore = 100 - (extraTries * 5);
+      if (calculatedScore < 50) calculatedScore = 50;
+
+      let cleanFeedbackText = "";
+
+      if (calculatedScore >= 90) {
+        cleanFeedbackText = "Luar Biasa! Mata kamu sangat tajam dan ingatan kamu hebat seperti wira! Kamu berjaya mengecam bentuk huruf dengan sangat pantas!";
+      } else if (calculatedScore >= 80) {
+        cleanFeedbackText = "Syabas! Usaha yang sungguh cemerlang! Fokus kamu semakin baik dan kamu semakin yakin!";
+      } else if (calculatedScore >= 70) {
+        cleanFeedbackText = "Bagus Sekali! Kamu makin mahir mengecam bunyi dan bentuk huruf. Teruskan latihan ini!";
+      } else if (calculatedScore >= 60) {
+        cleanFeedbackText = "Hebat! Teruskan usaha! Setiap kali kamu berlatih, otak kamu akan menjadi semakin cekap!";
+      } else {
+        cleanFeedbackText = "Jangan Putus Asa! Kamu seorang wira yang berani. Mari cuba lagi untuk dapatkan skor yang lebih tinggi!";
+      }
+
+      document.getElementById('win-player-name').innerText = playerName;
+      document.getElementById('final-score').innerText = calculatedScore;
+      document.getElementById('feedback-text').innerHTML = "🌟 " + cleanFeedbackText;
+      document.getElementById('final-tries').innerText = triesCount;
+      
+      // Hantar nama, markah Game 1, dan ulasan khusus Game 1 ke Google Sheets
+      hantarDataKeGoogleSheet(playerName, calculatedScore, cleanFeedbackText);
+
+      document.getElementById('win-modal').classList.add('show');
+    }
+
+    function restartGame() {
+      document.getElementById('win-modal').classList.remove('show');
+      initGame();
+    }
+  </script>
+</body>
+</html>
