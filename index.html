@@ -495,25 +495,24 @@
 
   <script>
     // ==========================================
-    // INTEGRASI GOOGLE APPS SCRIPT
+    // FUNGSI HANTAR KEPUTUSAN KE GOOGLE SHEETS
     // ==========================================
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbygoJHOVcHHw4PBkzJ1V-xlhjg7gEdSyzNhq1pkff1OtpPlazHsixAstsuwW8AEW-AN/exec";
+    function hantarKeputusanGame(namaMurid, skorMurid, ulasanGame) {
+      
+      // 1. URL Web App Google Apps Script Baharu Anda
+      var scriptURL = "https://script.google.com/macros/s/AKfycbyDsjoikwEU7qKmyP4-C3s5Vw20i7ZIu5myo53Q2BU2vyOnFo_TfwriW0p9FyuEaMXeoA/exec";
 
-    function hantarDataKeGoogleSheet(namaPemain, markahG1, ulasanG1) {
-      if (!WEB_APP_URL || WEB_APP_URL === "") {
-        console.warn("[Google Sheets] Web App URL belum dimasukkan.");
-        return;
-      }
-
-      const dataGame = {
-        targetStory: "BATU BELAH BATU BERTANGKUP",
-        playerName: namaPemain,
-        gameType: "G1",          // Menandakan data ini untuk Game 1
-        score: markahG1,         // Markah Game 1
-        ulasanGame: ulasanG1     // Ulasan khusus Game 1
+      // 2. Tetapan data game ini (Sepadan dengan format Code.gs asal)
+      var dataGame = {
+        nama: namaMurid,
+        book: "KHAS BATU BELAH BATU BERTANGKUP", // Tab sasaran di Google Sheet
+        game: 1,                            // Ditandakan 1 untuk Game 1
+        skor: skorMurid,
+        ulasan: ulasanGame || ""
       };
 
-      fetch(WEB_APP_URL, {
+      // 3. Proses penghantaran data
+      fetch(scriptURL, {
         method: "POST",
         mode: "no-cors",
         headers: {
@@ -521,10 +520,10 @@
         },
         body: JSON.stringify(dataGame)
       })
-      .then(() => {
-        console.log("Data Game 1 berjaya dihantar ke Google Sheets!");
+      .then(function() {
+        console.log("Data Game 1 (G1) berjaya dihantar ke Google Sheets!");
       })
-      .catch((error) => {
+      .catch(function(error) {
         console.error("Ralat semasa menghantar data ke Google Sheets:", error);
       });
     }
@@ -533,7 +532,7 @@
     // FUNGSI MEMAIN KAN FAIL AUDIO MP3 (DENGAN SAFE FALLBACK)
     // ==========================================
     function playAudioFile(fileName, fallbackText) {
-      const audioPath = fileName;
+      const audioPath = 'audio/' + fileName;
       const audio = new Audio(audioPath);
 
       const promise = audio.play();
@@ -766,8 +765,8 @@
       document.getElementById('feedback-text').innerHTML = "🌟 " + cleanFeedbackText;
       document.getElementById('final-tries').innerText = triesCount;
       
-      // Hantar nama, markah Game 1, dan ulasan khusus Game 1 ke Google Sheets
-      hantarDataKeGoogleSheet(playerName, calculatedScore, cleanFeedbackText);
+      // Hantar data menggunakan hantarKeputusanGame
+      hantarKeputusanGame(playerName, calculatedScore, cleanFeedbackText);
 
       document.getElementById('win-modal').classList.add('show');
     }
