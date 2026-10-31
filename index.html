@@ -529,10 +529,11 @@
     }
 
     // ==========================================
-    // FUNGSI MEMAIN KAN FAIL AUDIO MP3 (DENGAN SAFE FALLBACK)
+    // FUNGSI MEMAIN KAN FAIL AUDIO MP3 (LALUAN SELARI)
     // ==========================================
     function playAudioFile(fileName, fallbackText) {
-      const audioPath = 'audio/' + fileName;
+      // Pembetulan: Tukar ke './' kerana fail audio berada selari di folder yang sama
+      const audioPath = './' + fileName;
       const audio = new Audio(audioPath);
 
       const promise = audio.play();
@@ -757,7 +758,7 @@
       } else if (calculatedScore >= 60) {
         cleanFeedbackText = "Hebat! Teruskan usaha! Setiap kali kamu berlatih, otak kamu akan menjadi semakin cekap!";
       } else {
-        cleanFeedbackText = "Jangan Putus Asa! Kamu seorang wira yang berani. Mari cuba lagi untuk dapatkan skor yang lebih tinggi!";
+        cleanFeedbackText = "Jangan Putus Asa! Kamu seorang wira yang berani. Mari cuba lagi me dapatkan skor yang lebih tinggi!";
       }
 
       document.getElementById('win-player-name').innerText = playerName;
